@@ -5,7 +5,7 @@ import com.getcapacitor.JSObject;
 import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
 import com.getcapacitor.annotation.CapacitorPlugin;
-import com.getcapacitor.annotation.PluginMethod;
+import com.getcapacitor.PluginMethod;
 
 import okhttp3.Call;
 import okhttp3.Callback;

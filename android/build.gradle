@@ -19,5 +19,6 @@ android {
 }
 
 dependencies {
-    implementation project(':capacitor-android')
+    compileOnly project(':capacitor-android')
+    implementation "com.squareup.okhttp3:okhttp:4.12.0"
 }
