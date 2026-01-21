@@ -69,10 +69,23 @@ public class EnhancedHttpPlugin extends Plugin {
         }
 
         JSObject headers = call.getObject("headers");
-        JSObject dataObj = call.getObject("data");
 
-        String bodyString = (dataObj != null) ? dataObj.toString() : "";
+        // JS may send `data` either as an object (recommended) or as a JSON string.
+        JSObject dataObj = call.getObject("data");
+        String dataStr = call.getString("data");
+
+        String bodyString = "";
+        if (dataObj != null) {
+            // JSObject#toString() returns JSON
+            bodyString = dataObj.toString();
+        } else if (dataStr != null) {
+            bodyString = dataStr;
+        }
+
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+        if (JSON == null) {
+            JSON = MediaType.parse("application/json");
+        }
         RequestBody body = RequestBody.create(bodyString, JSON);
 
         OkHttpClient client = getUnsafeClient();
@@ -92,6 +105,12 @@ public class EnhancedHttpPlugin extends Plugin {
                 }
             }
         }
+
+        // Ensure Content-Type is set for JSON bodies unless caller explicitly overrides it.
+        if (headers == null || headers.optString("Content-Type", null) == null) {
+            builder.addHeader("Content-Type", "application/json");
+        }
+
 
         Request request = builder.build();
 
